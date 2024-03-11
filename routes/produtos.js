@@ -18,6 +18,36 @@ router.get('/', (req, res) => {
   }
 });
 
+// Insirir produto
+let idProdutoInserido = 1;
+router.post('/', (req, res) => {
+    try {
+      if (!req.body) {
+        return res.status(400).json({ mensagem: "Corpo da solicitação vazio." });
+      }
+      const { nome, preco, descricao } = req.body;
+      
+      idProdutoInserido++;
+  
+      const produtoCriado = {
+        id_produtos: idProdutoInserido,
+          nome,
+          preco,
+          descricao
+      };
+
+      res.status(201).json({
+          mensagem: "Produto inserido com sucesso.",
+          produtoCriado: produtoCriado
+      });
+    } catch (error) {
+      console.error('Erro ao processar a rota /:', error);
+      res.status(500).json({ error: 'Erro interno ao processar a requisição' });
+    }
+  });
+
+  
+  
 
 
 
