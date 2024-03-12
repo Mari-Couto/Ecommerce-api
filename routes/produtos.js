@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
       idProdutoInserido++;
   
       const produtoCriado = {
-        id_produtos: idProdutoInserido,
+        id_produto: idProdutoInserido,
           nome,
           preco,
           descricao
@@ -46,9 +46,38 @@ router.post('/', (req, res) => {
     }
   });
 
-  
+  //Alterar produto
+router.patch('/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nome, preco, descricao } = req.body;
+
+    const produtos = [
+      new Produto(1, 'Carrinho', 10.99, 'Descrição do produto 1'),
+      new Produto(2, 'Produto 2', 20.49, 'Descrição do produto 2'),
+      new Produto(3, 'Produto 3', 5.99, 'Descrição do produto 3')
+    ];
+
+    const produtoIndex = produtos.findIndex(item => item.id === parseInt(id));
+    if (produtoIndex === -1) {
+      return res.status(404).json({ mensagem: "Produto não encontrado." });
+    }
+
+    if (nome) produtos[produtoIndex].nome = nome;
+    if (preco) produtos[produtoIndex].preco = preco;
+    if (descricao) produtos[produtoIndex].descricao = descricao;
+
+    const produtoAtualizado = produtos[produtoIndex];
+    res.status(200).json({ mensagem: "Produto atualizado com sucesso", produto: produtoAtualizado });
+  } catch (error) {
+    console.error('Erro ao processar a rota PATCH /:id', error);
+    res.status(500).json({ error: 'Erro interno ao processar a requisição' });
+  }
+});
   
 
 
 
 module.exports = router;
+
+
