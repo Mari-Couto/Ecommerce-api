@@ -1,17 +1,19 @@
 const express = require('express');
 const Produto = require('../models/produtoModelo');
 const router = express.Router();
+const mysql = require('../mysql');
+
 
 
 //Exibi os produtos
 router.get('/', (req, res) => {
   try {
-    const produtos = [
+    const osprodutos = [
       new Produto(1, 'Carrinho', 10.99, 'Descrição do produto 1'),
       new Produto(2, 'Produto 2', 20.49, 'Descrição do produto 2'),
       new Produto(3, 'Produto 3', 5.99, 'Descrição do produto 3')
     ];
-    res.status(200).json(produtos);
+    res.status(200).json(osprodutos);
   } catch (error) {
     console.error('Erro ao processar a rota /:', error);
     res.status(500).json({ error: 'Erro interno ao processar a requisição' });
@@ -52,22 +54,22 @@ router.patch('/:id', (req, res) => {
     const { id } = req.params;
     const { nome, preco, descricao } = req.body;
 
-    const produtos = [
+    const osprodutos = [
       new Produto(1, 'Carrinho', 10.99, 'Descrição do produto 1'),
       new Produto(2, 'Produto 2', 20.49, 'Descrição do produto 2'),
       new Produto(3, 'Produto 3', 5.99, 'Descrição do produto 3')
     ];
 
-    const produtoIndex = produtos.findIndex(item => item.id === parseInt(id));
+    const produtoIndex = osprodutos.findIndex(item => item.id === parseInt(id));
     if (produtoIndex === -1) {
       return res.status(404).json({ mensagem: "Produto não encontrado." });
     }
 
-    if (nome) produtos[produtoIndex].nome = nome;
-    if (preco) produtos[produtoIndex].preco = preco;
-    if (descricao) produtos[produtoIndex].descricao = descricao;
+    if (nome) osprodutos[produtoIndex].nome = nome;
+    if (preco) osprodutos[produtoIndex].preco = preco;
+    if (descricao) osprodutos[produtoIndex].descricao = descricao;
 
-    const produtoAtualizado = produtos[produtoIndex];
+    const produtoAtualizado = osprodutos[produtoIndex];
     res.status(200).json({ mensagem: "Produto atualizado com sucesso", produto: produtoAtualizado });
   } catch (error) {
     console.error('Erro ao processar a rota PATCH /:id', error);
@@ -80,18 +82,18 @@ router.delete('/:id', (req, res) => {
   try {
     const {id} = req.params;
 
-    const produtos = [
+    const osprodutos = [
       new Produto(1, 'Carrinho', 10.99, 'Descrição do produto 1'),
       new Produto(2, 'Produto 2', 20.49, 'Descrição do produto 2'),
       new Produto(3, 'Produto 3', 5.99, 'Descrição do produto 3')
     ];
-    
-    const produtoIndex = produtos.findIndex(item => item.id === parseInt(id));
+
+    const produtoIndex = osprodutos.findIndex(item => item.id === parseInt(id));
     if(produtoIndex === -1) {
       return res.status(404).json({ mensagem: "Produto não encontrado."});
     }
 
-    produtos.splice(produtoIndex, 1);
+    osprodutos.splice(produtoIndex, 1);
 
     res.status(200).json({ mensagem: "Produto removido com sucesso"});
   } catch (error) {
