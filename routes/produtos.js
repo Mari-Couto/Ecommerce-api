@@ -82,29 +82,24 @@ router.post('/', (req, res) => {
   
 
 //deletar um produto
+//deletar um produto
 router.delete('/:id', (req, res) => {
   try {
-    const {id} = req.params;
-
-    const osprodutos = [
-      new Produto(1, 'Carrinho', 10.99, 'Descrição do produto 1'),
-      new Produto(2, 'Produto 2', 20.49, 'Descrição do produto 2'),
-      new Produto(3, 'Produto 3', 5.99, 'Descrição do produto 3')
-    ];
-
-    const produtoIndex = osprodutos.findIndex(item => item.id === parseInt(id));
-    if(produtoIndex === -1) {
-      return res.status(404).json({ mensagem: "Produto não encontrado."});
-    }
-
-    osprodutos.splice(produtoIndex, 1);
-
-    res.status(200).json({ mensagem: "Produto removido com sucesso"});
+    mysql.query('DELETE FROM osprodutos WHERE id = ?', [req.params.id], (err, result) => {
+      if (err) {
+        console.error('Erro ao excluir produto:', err);
+        res.status(500).json({ error: 'Erro ao excluir produto' });
+      } else {
+        console.log('Produto removido com sucesso:', result);
+        res.status(200).json({ message: 'Produto removido com sucesso' });
+      }
+    });
   } catch (error) {
     console.error('Erro ao processar a rota DELETE /:id', error);
     res.status(500).json({ error: 'Erro interno ao processar a requisição' });
   }
 });
+
   
 
 
