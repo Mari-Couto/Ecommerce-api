@@ -4,17 +4,22 @@ const router = express.Router();
 const mysql = require('../mysql');
 
 //Exibi os produtos
-mysql.query(
-  'SELECT * FROM osprodutos',
-  (err, results, fields) => {
-    if (err) {
-      console.error('Erro ao executar a consulta:', err);
-      return;
-    }
-    console.log('Resultados da consulta:', results);
-    console.log('Campos da consulta:', fields);
+router.get('/', (req, res) => {
+  try {
+    mysql.query('SELECT * FROM osprodutos', (err, results) => {
+      if (err) {
+        throw err;
+      }
+
+      const produtos = results.map(item => new Produto(item.id, item.nome, item.preco, item.descricao));
+      res.status(200).json(produtos);
+    });
+  } catch (error) {
+    console.error('Erro ao executar a consulta:', error);
+    res.status(500).json({ error: 'Erro interno ao processar a requisição' });
   }
-);
+});
+
 
 // Insirir produto
 let idProdutoInserido = 1;
