@@ -10,7 +10,6 @@ router.get('/', (req, res) => {
       if (err) {
         throw err;
       }
-
       const produtos = results.map(item => new Produto(item.id, item.nome, item.preco, item.descricao));
       res.status(200).json(produtos);
     });
@@ -21,33 +20,32 @@ router.get('/', (req, res) => {
 });
 
 
-// Insirir produto
-let idProdutoInserido = 1;
+// Inserir produto
 router.post('/', (req, res) => {
-    try {
-      if (!req.body) {
-        return res.status(400).json({ mensagem: "Corpo da solicitação vazio." });
-      }
-      const { nome, preco, descricao } = req.body;
-      
-      idProdutoInserido++;
-  
-      const produtoCriado = {
-        id_produto: idProdutoInserido,
-          nome,
-          preco,
-          descricao
-      };
-
-      res.status(201).json({
-          mensagem: "Produto inserido com sucesso.",
-          produtoCriado: produtoCriado
+  const produto = req.body; 
+  try {
+    mysql.query('INSERT INTO osprodutos (nome, preco, descricao) VALUES (?, ?, ?)', 
+      [produto.nome, produto.preco, produto.descricao], 
+       (err, result) => {
+         if (err) {
+          res.status(500).json({ error: 'Erro ao inserir produto' });
+        } else {
+          const novoProduto = {
+            id: result.insertId,
+            nome: produto.nome,
+            preco: produto.preco,
+            descricao: produto.descricao
+          };
+          res.status(200).json({ message: 'Produto inserido com sucesso', produto: novoProduto });
+        }
       });
-    } catch (error) {
-      console.error('Erro ao processar a rota /:', error);
-      res.status(500).json({ error: 'Erro interno ao processar a requisição' });
-    }
-  });
+  } catch (error) {
+    console.error('Erro ao executar a consulta:', error);
+    res.status(500).json({ error: 'Erro interno ao processar a requisição' });
+  }
+});
+
+
 
   //Alterar produto
 router.patch('/:id', (req, res) => {
