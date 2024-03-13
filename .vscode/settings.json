@@ -11,7 +11,8 @@
             "driver": "MySQL",
             "name": "EcommerceNovo",
             "database": "ecommercenovo",
-            "username": "root"
+            "username": "root",
+            "askForPassword": true
         }
     ]
 }

@@ -3,22 +3,18 @@ const Produto = require('../models/produtoModelo');
 const router = express.Router();
 const mysql = require('../mysql');
 
-
-
 //Exibi os produtos
-router.get('/', (req, res) => {
-  try {
-    const osprodutos = [
-      new Produto(1, 'Carrinho', 10.99, 'Descrição do produto 1'),
-      new Produto(2, 'Produto 2', 20.49, 'Descrição do produto 2'),
-      new Produto(3, 'Produto 3', 5.99, 'Descrição do produto 3')
-    ];
-    res.status(200).json(osprodutos);
-  } catch (error) {
-    console.error('Erro ao processar a rota /:', error);
-    res.status(500).json({ error: 'Erro interno ao processar a requisição' });
+mysql.query(
+  'SELECT * FROM osprodutos',
+  (err, results, fields) => {
+    if (err) {
+      console.error('Erro ao executar a consulta:', err);
+      return;
+    }
+    console.log('Resultados da consulta:', results);
+    console.log('Campos da consulta:', fields);
   }
-});
+);
 
 // Insirir produto
 let idProdutoInserido = 1;
