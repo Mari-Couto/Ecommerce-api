@@ -36,7 +36,7 @@ router.post('/', (req, res) => {
             preco: produto.preco,
             descricao: produto.descricao
           };
-          res.status(200).json({ message: 'Produto inserido com sucesso', produto: novoProduto });
+          res.status(201).json({ message: 'Produto inserido com sucesso', produto: novoProduto });
         }
       });
   } catch (error) {
@@ -68,7 +68,7 @@ router.post('/', (req, res) => {
            preco: req.body.preco,
            descricao: req.body.descricao
           };
-     res.status(200).json({ message: 'Produto atualizado com sucesso', produto: produtoAtualizado });
+     res.status(202).json({ message: 'Produto atualizado com sucesso', produto: produtoAtualizado });
       } else {
      res.status(404).json({ error: 'Produto não encontrado' });
       }}
@@ -80,8 +80,6 @@ router.post('/', (req, res) => {
     }
   });
   
-
-//deletar um produto
 //deletar um produto
 router.delete('/:id', (req, res) => {
   try {
@@ -91,7 +89,7 @@ router.delete('/:id', (req, res) => {
         res.status(500).json({ error: 'Erro ao excluir produto' });
       } else {
         console.log('Produto removido com sucesso:', result);
-        res.status(200).json({ message: 'Produto removido com sucesso' });
+        res.status(202).json({ message: 'Produto removido com sucesso' });
       }
     });
   } catch (error) {
@@ -99,9 +97,6 @@ router.delete('/:id', (req, res) => {
     res.status(500).json({ error: 'Erro interno ao processar a requisição' });
   }
 });
-
-  
-
 
 
 module.exports = router;

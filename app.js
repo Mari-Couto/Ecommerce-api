@@ -1,15 +1,15 @@
 const express = require('express');
+const app = express();
 const morgan = require('morgan');
 const produtoRouter = require('./routes/produtos');
-const app = express();
+const pedidoRouter = require('./routes/pedidos')
 
 app.use(morgan('dev'));
-
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use(express.urlencoded({ extended: false }));
-
 app.use('/produtos', produtoRouter);
+app.use('/pedidos', pedidoRouter);
 
 app.use((req, res, next) => {
     const error = new Error('Rota não encontrada');
