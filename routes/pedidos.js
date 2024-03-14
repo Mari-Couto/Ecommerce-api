@@ -78,10 +78,31 @@ router.patch('/:id', (req, res) => {
 
 
 // deletar pedido
-router.delete('/', (req, res) => {
-    res.status(202).send({
-        message: "delete funcionando"
-    })
+router.delete('/:id', (req, res) => {
+    try {
+        mysql.query('SELECT * FROM osprodutos WHERE id = ?', [req.params.id], (err, results) => {
+            if (err) {
+                console.error('Erro ao buscar produto:', err);
+                res.status(500).json({ error: 'Erro ao buscar produto' });
+                return;
+            }
+            if (results.length === 0) {
+                res.status(404).json({ error: 'Produto não encontrado' });
+                return;
+            }
+            mysql.query('DELETE FROM ospedidos WHERE produto_id = ?', [req.params.id], (err, result) => {
+                if (err) {
+                    console.error('Erro ao excluir pedido:', err);
+                    res.status(500).json({ error: 'Erro ao excluir pedido' });
+                } else {
+                    res.status(202).json({ message: 'Pedido removido com sucesso' });
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Erro ao processar a rota DELETE /:id', error);
+        res.status(500).json({ error: 'Erro interno ao processar a requisição' });
+    }
 });
 
 

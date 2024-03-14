@@ -86,7 +86,6 @@ router.delete('/:id', (req, res) => {
         console.error('Erro ao excluir produto:', err);
         res.status(500).json({ error: 'Erro ao excluir produto' });
       } else {
-        console.log('Produto removido com sucesso:', result);
         res.status(202).json({ message: 'Produto removido com sucesso' });
       }
     });
