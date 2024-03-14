@@ -8,12 +8,12 @@ const mysql = require('../mysql')
 router.get('/', (req, res) => {
     try {
         mysql.query('SELECT * FROM ospedidos', (err, results) =>{
-            if(err) {
-                throw err;
-            }
-            const pedidos = results.map(item => new Pedido(item.produto_id, item.quantidade));
-            res.status(200).json(pedidos);
-        });
+        if(err) {
+            throw err;
+        }
+        const pedidos = results.map(item => new Pedido(item.produto_id, item.quantidade));
+        res.status(200).json(pedidos);
+    });
         
     } catch (error) {
         console.error('Erro ao executar a consulta:', error);
@@ -23,10 +23,34 @@ router.get('/', (req, res) => {
  
 // Inserir um pedido
 router.post('/', (req, res) => {
-    res.status(201).send({
-        message: "post funcionando"
-    })
+    const { produto_id, quantidade } = req.body;
+
+    try {
+    if (!produto_id || !quantidade) {
+        throw new Error('O id do produto e a quantidade são obrigatórios');
+    }
+    mysql.query('SELECT id FROM osprodutos WHERE id = ?', [produto_id], (err, results) => {
+        if (err) {
+            throw err;
+        }
+        if (results.length === 0) {
+            throw new Error(`O produto com o id ${produto_id} não foi encontrado`);
+        }
+        mysql.query('INSERT INTO ospedidos (produto_id, quantidade) VALUES (?, ?)', [produto_id, quantidade], (err, result) => {
+            if (err) {
+                throw err;
+            }
+            console.log('Novo pedido inserido com sucesso:', { produto_id, quantidade });
+            res.status(201).json({ message: 'Pedido criado com sucesso', produto_id, quantidade });
+        });
+    });
+    } catch (error) {
+        console.error('Erro ao criar o pedido:', error);
+        res.status(400).json({ error: error.message });
+    }
 });
+
+
 
 
 // alterar pedido
