@@ -50,15 +50,32 @@ router.post('/', (req, res) => {
     }
 });
 
-
-
-
 // alterar pedido
-router.patch('/', (req, res) =>{
-    res.status(202).send({
-        message: "patch funcionando"
-    })
+router.patch('/:id', (req, res) => {
+    const pedidoId = req.params.id;
+    const { quantidade } = req.body;
+
+    try {
+        if (!quantidade) {
+            throw new Error('A quantidade é obrigatória para a alteração do pedido');
+        }
+
+        mysql.query('UPDATE ospedidos SET quantidade = ? WHERE produto_id = ?', [quantidade, pedidoId], (err, result) => {
+            if (err) {
+                throw err;
+            }
+            
+            if (result.affectedRows === 0) {
+                throw new Error(`Pedido com o ID ${pedidoId} não encontrado`);
+            }
+            res.status(202).json({ message: 'Pedido atualizado com sucesso', produto_id: pedidoId, quantidade });
+        });
+    } catch (error) {
+        console.error('Erro ao atualizar o pedido:', error);
+        res.status(400).json({ error: error.message });
+    }
 });
+
 
 // deletar pedido
 router.delete('/', (req, res) => {
@@ -66,5 +83,8 @@ router.delete('/', (req, res) => {
         message: "delete funcionando"
     })
 });
+
+
+  
 module.exports = router;
 

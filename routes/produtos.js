@@ -45,8 +45,6 @@ router.post('/', (req, res) => {
   }
 });
 
-
-
   //Alterar produto
   router.patch('/:id', (req, res) => {
  try {
