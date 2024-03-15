@@ -7,19 +7,33 @@ const mysql = require('../mysql')
 //exibir pedidos
 router.get('/', (req, res) => {
     try {
-        mysql.query('SELECT * FROM ospedidos', (err, results) =>{
-        if(err) {
-            throw err;
-        }
-        const pedidos = results.map(item => new Pedido(item.produto_id, item.quantidade));
-        res.status(200).json(pedidos);
-    });
-        
+        mysql.query(`
+            SELECT 
+                ospedidos.produto_id,
+                ospedidos.quantidade, 
+                osprodutos.nome AS produto_nome,
+                osprodutos.preco AS preco_unitario
+            FROM 
+                ospedidos  
+            JOIN 
+                osprodutos ON ospedidos.produto_id = osprodutos.id`, 
+            (err, results) => {
+                if (err) {
+                    throw err;
+                }
+                const pedidos = results.map(item => new Pedido(item.produto_id, item.quantidade, item.produto_nome, item.preco_unitario));
+                res.status(200).json(pedidos);
+            }
+        );
     } catch (error) {
         console.error('Erro ao executar a consulta:', error);
-        res.status(500).json({ error: 'Erro interno ao processar a requisição'})
+        res.status(500).json({ error: 'Erro interno ao processar a requisição' });
     }
 });
+
+
+
+
  
 // Inserir um pedido
 router.post('/', (req, res) => {
