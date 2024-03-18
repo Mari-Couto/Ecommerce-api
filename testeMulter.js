@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
 const storage = require('./multerConfig')
 
 const upload = multer({ storage: storage });
@@ -10,7 +9,8 @@ router.get('/', (req, res) => {
     res.status(200).send({ message: 'ola' });
 });
 
-router.post('/upload', upload.single('file'), (req, res) => {
+router.post('/', upload.single('file'), (req, res) => {
+    console.log(req.file)
     try {
         if (!req.file) {
             return res.status(400).json({ message: 'Nenhum arquivo foi enviado.' });
