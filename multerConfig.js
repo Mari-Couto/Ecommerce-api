@@ -7,10 +7,10 @@ const storage = multer.diskStorage({
     },
 
     filename: (req, file, callback) => {
-        const time = new Date().getTime();
-
+        const time = new Date().toLocaleDateString().split('/').join('-'); 
         callback(null, `${time}_${file.originalname}`);
     },
+    
 });
 
 module.exports = storage;

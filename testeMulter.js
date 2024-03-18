@@ -10,12 +10,11 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', upload.single('file'), (req, res) => {
-    console.log(req.file)
     try {
         if (!req.file) {
             return res.status(400).json({ message: 'Nenhum arquivo foi enviado.' });
         }
-        return res.status(200).json({ message: 'Arquivo enviado com sucesso.', file: req.file });
+        return res.status(200).json({ message: 'Arquivo enviado com sucesso.', file: req.file.filename });
     } catch (error) {
         console.error('Erro ao fazer upload do arquivo:', error);
         return res.status(500).json({ error: 'Erro interno ao processar a requisição.' });
