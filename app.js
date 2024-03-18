@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use('/produtos', produtoRouter);
 app.use('/pedidos', pedidoRouter);
-app.use('/upload', rotaRouter)
+app.use('/upload', rotaRouter);
 
 app.use((req, res, next) => {
     const error = new Error('Rota não encontrada');
