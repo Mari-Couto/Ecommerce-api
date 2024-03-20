@@ -34,20 +34,14 @@ router.post('/', upload.single('file'), (req, res) => {
     }
     const fileContent = fs.readFileSync(req.file.path);
 
-mysql.query('INSERT INTO osprodutos (nome, preco, descricao, file) VALUES (?, ?, ?, ?)', 
-   [produto.nome, produto.preco, produto.descricao, fileContent], 
-     (err, result) => {
-       if (err) {
-         res.status(500).json({ error: 'Erro ao inserir produto' });
+    mysql.query('INSERT INTO osprodutos (nome, preco, descricao, file) VALUES (?, ?, ?, ?)', 
+      [produto.nome, produto.preco, produto.descricao, fileContent], 
+      (err, result) => {
+        if (err) {
+          res.status(500).json({ error: 'Erro ao inserir produto' });
         } else {
-         const novoProduto = {
-          id: result.insertId,
-          nome: produto.nome,
-          preco: produto.preco,
-          descricao: produto.descricao,
-          file: req.file.filename
-        };
-          res.status(201).json({ message: 'Produto inserido com sucesso e arquivo enviado com sucesso.', produto: novoProduto, file: req.file.filename});
+          const novoProdutoId = result.insertId;
+          res.status(201).json({ id: novoProdutoId, message: 'Produto inserido com sucesso.' });
         }
       });
 
@@ -56,6 +50,7 @@ mysql.query('INSERT INTO osprodutos (nome, preco, descricao, file) VALUES (?, ?,
     res.status(500).json({ error: 'Erro interno ao processar a requisição' });
   }
 });
+
 
 
   //Alterar produto
