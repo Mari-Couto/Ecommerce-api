@@ -2,6 +2,11 @@ const express = require('express');
 const Produto = require('../models/produtoModelo');
 const router = express.Router();
 const mysql = require('../mysql');
+const multer = require('multer');
+const storage = require('../multerConfig')
+const fs = require('fs');
+
+const upload = multer({ storage: storage });
 
 //Exibi os produtos
 router.get('/', (req, res) => {
@@ -20,30 +25,38 @@ router.get('/', (req, res) => {
 });
 
 
-// Inserir produto
-router.post('/', (req, res) => {
+//Inseri os produtos
+router.post('/', upload.single('file'), (req, res) => {
   const produto = req.body; 
   try {
-    mysql.query('INSERT INTO osprodutos (nome, preco, descricao) VALUES (?, ?, ?)', 
-      [produto.nome, produto.preco, produto.descricao], 
-       (err, result) => {
-         if (err) {
-          res.status(500).json({ error: 'Erro ao inserir produto' });
+    if (!req.file) {
+      return res.status(400).json({ message: 'Nenhum arquivo foi enviado.' });
+    }
+    const fileContent = fs.readFileSync(req.file.path);
+
+mysql.query('INSERT INTO osprodutos (nome, preco, descricao, file) VALUES (?, ?, ?, ?)', 
+   [produto.nome, produto.preco, produto.descricao, fileContent], 
+     (err, result) => {
+       if (err) {
+         res.status(500).json({ error: 'Erro ao inserir produto' });
         } else {
-          const novoProduto = {
-            id: result.insertId,
-            nome: produto.nome,
-            preco: produto.preco,
-            descricao: produto.descricao
-          };
-          res.status(201).json({ message: 'Produto inserido com sucesso', produto: novoProduto });
+         const novoProduto = {
+          id: result.insertId,
+          nome: produto.nome,
+          preco: produto.preco,
+          descricao: produto.descricao,
+          file: req.file.filename
+        };
+          res.status(201).json({ message: 'Produto inserido com sucesso e arquivo enviado com sucesso.', produto: novoProduto, file: req.file.filename});
         }
       });
+
   } catch (error) {
     console.error('Erro ao executar a consulta:', error);
     res.status(500).json({ error: 'Erro interno ao processar a requisição' });
   }
 });
+
 
   //Alterar produto
   router.patch('/:id', (req, res) => {
