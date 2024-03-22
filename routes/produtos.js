@@ -15,7 +15,11 @@ router.get('/', (req, res) => {
       if (err) {
         throw err;
       }
-      const produtos = results.map(item => new Produto(item.id, item.nome, item.preco, item.descricao));
+      const produtos = results.map(item => {
+       
+        const file = item.file ? `uploads/${item.file}` : null;
+        return new Produto(item.id, item.nome, item.preco, item.descricao, file);
+      });
       res.status(200).json(produtos);
     });
   } catch (error) {
@@ -27,6 +31,7 @@ router.get('/', (req, res) => {
 
 //Inseri os produtos
 router.post('/', upload.single('file'), (req, res) => {
+  console.log(req.file)
   const produto = req.body; 
   try {
     if (!req.file) {
