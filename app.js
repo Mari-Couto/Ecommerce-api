@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const path = require('path');
 const rotaRouter = require('./testeMulter')
 const produtoRouter = require('./routes/produtos');
 const pedidoRouter = require('./routes/pedidos');
@@ -11,6 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use('/produtos', produtoRouter);
+app.use('/produtos', express.static(path.join(__dirname, 'uploads')));
 app.use('/pedidos', pedidoRouter);
 app.use('/upload', rotaRouter);
 

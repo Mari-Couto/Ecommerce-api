@@ -6,6 +6,7 @@ const multer = require('multer');
 const storage = require('../multerConfig')
 const fs = require('fs');
 const sharp = require('sharp');
+const path = require('path');
 const upload = multer({ storage: storage });
 
 //Exibi os produtos
@@ -32,37 +33,55 @@ router.get('/', (req, res) => {
 //Teste retorno imagem
 router.get('/imagens', (req, res) => {
   try {
-    mysql.query('SELECT file FROM osprodutos WHERE file IS NOT NULL', (err, results) => {
+    mysql.query('SELECT id FROM osprodutos WHERE file IS NOT NULL', (err, results) => {
       if (err) {
         console.error('Erro ao executar a consulta:', err);
         return res.status(500).json({ error: 'Erro interno ao processar a requisição' });
       }
 
-      if (results.length === 0) {
-        return res.status(404).json({ error: 'Nenhuma imagem encontrada' });
-      }
-
-      Promise.all(results.map(result => {
-        const imageBuffer = result.file;
-        return sharp(imageBuffer).toFormat('jpeg').toBuffer();
-      }))
-      .then(convertedImages => {
-        res.writeHead(200, { 'Content-Type': 'image/jpeg' });
-        convertedImages.forEach(convertedImageBuffer => {
-          res.write(convertedImageBuffer);
-        });
-        res.end();
-      })
-      .catch(err => {
-        console.error('Erro ao converter imagens:', err);
-        res.status(500).json({ error: 'Erro interno ao processar a requisição' });
-      });
+      const imageUrls = results.map(result => `/produtos/imagem/${result.id}`);
+      res.json(imageUrls);
     });
   } catch (error) {
     console.error('Erro ao processar a requisição:', error);
     res.status(500).json({ error: 'Erro interno ao processar a requisição' });
   }
 });
+
+// Rota para exibir a imagem com o ID correspondente
+router.get('/imagem/:id', (req, res) => {
+  const id = req.params.id;
+  try {
+    mysql.query('SELECT file FROM osprodutos WHERE id = ?', [id], (err, results) => {
+      if (err) {
+        console.error('Erro ao executar a consulta:', err);
+        return res.status(500).json({ error: 'Erro interno ao processar a requisição' });
+      }
+
+      if (results.length === 0) {
+        return res.status(404).json({ error: 'Imagem não encontrada' });
+      }
+
+      const imageBuffer = results[0].file;
+      sharp(imageBuffer)
+        .toFormat('jpeg')
+        .toBuffer()
+        .then(convertedImageBuffer => {
+          res.writeHead(200, { 'Content-Type': 'image/jpeg' });
+          res.end(convertedImageBuffer);
+        })
+        .catch(err => {
+          console.error('Erro ao converter imagem:', err);
+          res.status(500).json({ error: 'Erro interno ao processar a requisição' });
+        });
+    });
+  } catch (error) {
+    console.error('Erro ao processar a requisição:', error);
+    res.status(500).json({ error: 'Erro interno ao processar a requisição' });
+  }
+});
+
+
 
 
 //Inseri os produtos
