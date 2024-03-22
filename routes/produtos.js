@@ -6,44 +6,23 @@ const multer = require('multer');
 const storage = require('../multerConfig')
 const fs = require('fs');
 const sharp = require('sharp');
-const path = require('path');
 const upload = multer({ storage: storage });
 
 //Exibi os produtos
 router.get('/', (req, res) => {
   try {
-    mysql.query('SELECT * FROM osprodutos', (err, results) => {
+    mysql.query('SELECT id, nome, preco, descricao, file FROM osprodutos', (err, results) => {
       if (err) {
         throw err;
       }
       const produtos = results.map(item => {
-       
-        const file = item.file ? `uploads/${item.file}` : null;
-        return new Produto(item.id, item.nome, item.preco, item.descricao, file);
+        const fileLink = item.file ? `/produtos/imagem/${item.id}` : null;
+        return new Produto(item.id, item.nome, item.preco, item.descricao, fileLink);
       });
       res.status(200).json(produtos);
     });
   } catch (error) {
     console.error('Erro ao executar a consulta:', error);
-    res.status(500).json({ error: 'Erro interno ao processar a requisição' });
-  }
-});
-
-
-//Teste retorno imagem
-router.get('/imagens', (req, res) => {
-  try {
-    mysql.query('SELECT id FROM osprodutos WHERE file IS NOT NULL', (err, results) => {
-      if (err) {
-        console.error('Erro ao executar a consulta:', err);
-        return res.status(500).json({ error: 'Erro interno ao processar a requisição' });
-      }
-
-      const imageUrls = results.map(result => `/produtos/imagem/${result.id}`);
-      res.json(imageUrls);
-    });
-  } catch (error) {
-    console.error('Erro ao processar a requisição:', error);
     res.status(500).json({ error: 'Erro interno ao processar a requisição' });
   }
 });
@@ -57,11 +36,9 @@ router.get('/imagem/:id', (req, res) => {
         console.error('Erro ao executar a consulta:', err);
         return res.status(500).json({ error: 'Erro interno ao processar a requisição' });
       }
-
       if (results.length === 0) {
         return res.status(404).json({ error: 'Imagem não encontrada' });
       }
-
       const imageBuffer = results[0].file;
       sharp(imageBuffer)
         .toFormat('jpeg')
@@ -80,8 +57,6 @@ router.get('/imagem/:id', (req, res) => {
     res.status(500).json({ error: 'Erro interno ao processar a requisição' });
   }
 });
-
-
 
 
 //Inseri os produtos
