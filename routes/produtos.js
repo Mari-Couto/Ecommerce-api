@@ -27,6 +27,31 @@ router.get('/', (req, res) => {
   }
 });
 
+//Retorna dados de um produto
+router.get('/:id', (req, res) => {
+  const id = req.params.id;
+  try {
+    mysql.query('SELECT * FROM osprodutos WHERE id = ?', [id], (err, results) => {
+      if (err) {
+        throw err;
+      }
+     if( results.length == 0 ) {
+      return res.status(404).send({
+        mensagem: 'Não foi encontrado nenhum produto com esse ID'
+      }) 
+     }
+     const produtos = results.map(item => {
+      const fileLink = item.file ? `/produtos/imagem/${item.id}` : null;
+      return new Produto(item.id, item.nome, item.preco, item.descricao, fileLink);
+    });
+    res.status(200).json(produtos);
+    })
+  } catch (error) {
+    console.error('Erro ao executar a consulta:', error);
+    res.status(500).json({ error: 'Erro interno ao processar a requisição' });
+  }
+})
+
 // Rota para exibir a imagem com o ID correspondente
 router.get('/imagem/:id', (req, res) => {
   const id = req.params.id;
@@ -36,7 +61,7 @@ router.get('/imagem/:id', (req, res) => {
         console.error('Erro ao executar a consulta:', err);
         return res.status(500).json({ error: 'Erro interno ao processar a requisição' });
       }
-      if (results.length === 0) {
+      if (results.length === 0 || !results[0].file) { 
         return res.status(404).json({ error: 'Imagem não encontrada' });
       }
       const imageBuffer = results[0].file;
@@ -59,7 +84,7 @@ router.get('/imagem/:id', (req, res) => {
 });
 
 
-//Inseri os produtos
+//Insere os produtos
 router.post('/', upload.single('file'), (req, res) => {
   console.log(req.file)
   const produto = req.body; 
@@ -85,8 +110,6 @@ router.post('/', upload.single('file'), (req, res) => {
     res.status(500).json({ error: 'Erro interno ao processar a requisição' });
   }
 });
-
-
 
   //Alterar produto
   router.patch('/:id', (req, res) => {
