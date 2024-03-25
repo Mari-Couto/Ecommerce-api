@@ -112,37 +112,54 @@ router.post('/', upload.single('file'), (req, res) => {
 });
 
   //Alterar produto
-  router.patch('/:id', (req, res) => {
- try {
-  mysql.query(
-     `UPDATE osprodutos
-      SET nome = ?,
-          preco = ?,
-          descricao = ?
-    WHERE id = ?`,
- [req.body.nome, req.body.preco, req.body.descricao, req.params.id],
-   (err, result) => {
-     if (err) {
-     res.status(500).json({ error: 'Erro ao atualizar produto' });
-      } else {
-       if (result.affectedRows > 0) {
-         const produtoAtualizado = {
-           id: req.params.id,
-           nome: req.body.nome,
-           preco: req.body.preco,
-           descricao: req.body.descricao
-          };
-     res.status(202).json({ message: 'Produto atualizado com sucesso', produto: produtoAtualizado });
-      } else {
-     res.status(404).json({ error: 'Produto não encontrado' });
-      }}
-   }
-      );
+  router.patch('/:id', upload.single('file'), (req, res) => {
+    try {
+      let updateQuery = 'UPDATE osprodutos SET ';
+      const updateValues = [];
+  
+      if (req.body.nome) {
+        updateQuery += 'nome = ?, ';
+        updateValues.push(req.body.nome);
+      }
+      if (req.body.preco) {
+        updateQuery += 'preco = ?, ';
+        updateValues.push(req.body.preco);
+      }
+      if (req.body.descricao) {
+        updateQuery += 'descricao = ?, ';
+        updateValues.push(req.body.descricao);
+      }
+      if (req.file) {
+        updateQuery += 'file = ?, ';
+        const fileContent = fs.readFileSync(req.file.path);
+        updateValues.push(fileContent);
+      }
+  
+      if (updateValues.length === 0) {
+        return res.status(400).json({ error: 'Nenhum dado para atualizar' });
+      }
+  
+      updateQuery = updateQuery.slice(0, -2); // Remover a última vírgula e espaço
+      updateQuery += ' WHERE id = ?';
+      updateValues.push(req.params.id);
+  
+      mysql.query(updateQuery, updateValues, (err, result) => {
+        if (err) {
+          res.status(500).json({ error: 'Erro ao atualizar produto' });
+        } else {
+          if (result.affectedRows > 0) {
+            res.status(200).json({ message: 'Produto atualizado com sucesso' });
+          } else {
+            res.status(404).json({ error: 'Produto não encontrado' });
+          }
+        }
+      });
     } catch (error) {
       console.error('Erro ao processar a rota PATCH /:id', error);
       res.status(500).json({ error: 'Erro interno ao processar a requisição' });
     }
   });
+  
   
 //deletar um produto
 router.delete('/:id', (req, res) => {
