@@ -151,7 +151,11 @@ router.delete('/:id', (req, res) => {
       if (err) {
         console.error('Erro ao excluir produto:', err);
         res.status(500).json({ error: 'Erro ao excluir produto' });
-      } else {
+      } else if( result.affectedRows == 0 ) {
+        return res.status(404).send({
+          mensagem: 'Não foi encontrado nenhum produto com esse ID'
+        }); 
+      } else  {
         res.status(202).json({ message: 'Produto removido com sucesso' });
       }
     });
