@@ -31,33 +31,30 @@ router.get('/', (req, res) => {
     }
 });
 
-
-
-
  
-// Inserir um pedido
+// Insere um pedido
 router.post('/', (req, res) => {
     const { produto_id, quantidade } = req.body;
-
     try {
-    if (!produto_id || !quantidade) {
-        throw new Error('O id do produto e a quantidade são obrigatórios');
-    }
-    mysql.query('SELECT id FROM osprodutos WHERE id = ?', [produto_id], (err, results) => {
-        if (err) {
-            throw err;
+        if (!produto_id || !quantidade) {
+            throw new Error('O id do produto e a quantidade são obrigatórios');
         }
-        if (results.length === 0) {
-            throw new Error(`O produto com o id ${produto_id} não foi encontrado`);
-        }
-        mysql.query('INSERT INTO ospedidos (produto_id, quantidade) VALUES (?, ?)', [produto_id, quantidade], (err, result) => {
+        mysql.query('SELECT id FROM osprodutos WHERE id = ?', [produto_id], (err, results) => {
             if (err) {
                 throw err;
             }
-            console.log('Novo pedido inserido com sucesso:', { produto_id, quantidade });
-            res.status(201).json({ message: 'Pedido criado com sucesso', produto_id, quantidade });
+            
+            if (results.affectedRows === 0){
+                return res.status(404).send({
+                  mensagem: 'Não foi encontrado nenhum produto com esse ID'
+                }) }
+            mysql.query('INSERT INTO ospedidos (produto_id, quantidade) VALUES (?, ?)', [produto_id, quantidade], (err, result) => {
+                if (err) {
+                    throw err;
+                }
+                res.status(201).json({ message: 'Pedido criado com sucesso', produto_id });
+            });
         });
-    });
     } catch (error) {
         console.error('Erro ao criar o pedido:', error);
         res.status(400).json({ error: error.message });
@@ -80,9 +77,11 @@ router.patch('/:id', (req, res) => {
             }
             
             if (result.affectedRows === 0) {
-                throw new Error(`Pedido com o ID ${pedidoId} não encontrado`);
-            }
-            res.status(202).json({ message: 'Pedido atualizado com sucesso', produto_id: pedidoId, quantidade });
+                return res.status(404).send({
+                  mensagem: `Pedido com o ID ${pedidoId} não foi encontrado`
+                }) 
+               }
+            res.status(202).json({ message: 'Pedido atualizado com sucesso', produto_id: pedidoId });
         });
     } catch (error) {
         console.error('Erro ao atualizar o pedido:', error);

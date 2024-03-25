@@ -139,7 +139,7 @@ router.post('/', upload.single('file'), (req, res) => {
         return res.status(400).json({ error: 'Nenhum dado para atualizar' });
       }
   
-      updateQuery = updateQuery.slice(0, -2); // Remover a última vírgula e espaço
+      updateQuery = updateQuery.slice(0, -2); 
       updateQuery += ' WHERE id = ?';
       updateValues.push(req.params.id);
   
