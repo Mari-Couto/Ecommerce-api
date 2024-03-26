@@ -9,10 +9,14 @@ router.get('/', (req, res) => {
     try {
         mysql.query(`
             SELECT 
+                ospedidos.idpedido,
                 ospedidos.produto_id,
                 ospedidos.quantidade, 
+                ospedidos.data_pedido,
                 osprodutos.nome AS produto_nome,
-                osprodutos.preco AS preco_unitario
+                osprodutos.preco AS preco_unitario,
+                osprodutos.descricao AS produto_descricao,
+                osprodutos.file AS file
             FROM 
                 ospedidos  
             JOIN 
@@ -21,8 +25,61 @@ router.get('/', (req, res) => {
                 if (err) {
                     throw err;
                 }
-                const pedidos = results.map(item => new Pedido(item.produto_id, item.quantidade, item.produto_nome, item.preco_unitario));
-                res.status(200).json(pedidos);
+                const pedidos = results.map(item =>  {
+                    const fileLink = item.file ? `/produtos/imagem/${item.produto_id}` : null;
+                    return new Pedido(item.idpedido, item.produto_id, item.quantidade, item.data_pedido, item.produto_nome, 
+                item.preco_unitario, item.produto_descricao, fileLink)});
+                res.status(200).json(pedidos); 
+                    
+            });
+    } catch (error) {
+        console.error('Erro ao executar a consulta:', error);
+        res.status(500).json({ error: 'Erro interno ao processar a requisição' });
+    }
+});
+
+function formatarData(data) {
+    const dataObj = new Date(data);
+    const dia = dataObj.getDate().toString().padStart(2, '0');
+    const mes = (dataObj.getMonth() + 1).toString().padStart(2, '0'); 
+    const ano = dataObj.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+}
+
+//Retornar um pedido
+router.get('/:idpedido', (req, res) => {
+    const idpedido = req.params.idpedido; 
+    try {
+        mysql.query(`
+            SELECT 
+                ospedidos.idpedido,
+                ospedidos.produto_id,
+                ospedidos.quantidade, 
+                ospedidos.data_pedido,
+                osprodutos.nome AS produto_nome,
+                osprodutos.preco AS preco_unitario,
+                osprodutos.descricao AS produto_descricao,
+                osprodutos.file AS file
+            FROM 
+                ospedidos  
+            JOIN 
+                osprodutos ON ospedidos.produto_id = osprodutos.id
+            WHERE
+                ospedidos.idpedido = ?`, [idpedido], 
+            (err, results) => {
+                if (err) {
+                    throw err;
+                }
+                if (results.length === 0) { 
+                    return res.status(404).json({ error: 'Pedido não encontrado' });
+                }
+                const pedidos = results.map(item =>  {
+                    const fileLink = item.file ? `/produtos/imagem/${item.produto_id}` : null;
+                    const dataPedido = new Date(item.data_pedido); 
+                    const dataCerta = formatarData(dataPedido);
+                    return new Pedido(item.idpedido, item.produto_id, item.quantidade, dataCerta, item.produto_nome, 
+                item.preco_unitario, item.produto_descricao, fileLink)});
+                res.status(200).json(pedidos); 
             }
         );
     } catch (error) {
@@ -81,7 +138,7 @@ router.patch('/:id', (req, res) => {
                   mensagem: `Pedido com o ID ${pedidoId} não foi encontrado`
                 }) 
                }
-            res.status(202).json({ message: 'Pedido atualizado com sucesso', produto_id: pedidoId });
+            res.status(202).json({ message: 'Pedido atualizado com sucesso' });
         });
     } catch (error) {
         console.error('Erro ao atualizar o pedido:', error);
