@@ -43,7 +43,7 @@ function formatarData(data) {
     const dia = dataObj.getDate().toString().padStart(2, '0');
     const mes = (dataObj.getMonth() + 1).toString().padStart(2, '0'); 
     const ano = dataObj.getFullYear();
-    return `${dia}/${mes}/${ano}`;
+    return `${mes}/${dia}/${ano}`;
 }
 
 //Retornar um pedido
@@ -119,8 +119,8 @@ router.post('/', (req, res) => {
 });
 
 // alterar pedido
-router.patch('/:id', (req, res) => {
-    const pedidoId = req.params.id;
+router.patch('/:idpedido', (req, res) => {
+    const pedidoId = req.params.idpedido;
     const { quantidade } = req.body;
 
     try {
@@ -128,7 +128,7 @@ router.patch('/:id', (req, res) => {
             throw new Error('A quantidade é obrigatória para a alteração do pedido');
         }
 
-        mysql.query('UPDATE ospedidos SET quantidade = ? WHERE produto_id = ?', [quantidade, pedidoId], (err, result) => {
+        mysql.query('UPDATE ospedidos SET quantidade = ? WHERE idpedido = ?', [quantidade, pedidoId], (err, result) => {
             if (err) {
                 throw err;
             }
@@ -148,19 +148,9 @@ router.patch('/:id', (req, res) => {
 
 
 // deletar pedido
-router.delete('/:id', (req, res) => {
+router.delete('/:idpedido', (req, res) => {
     try {
-        mysql.query('SELECT * FROM osprodutos WHERE id = ?', [req.params.id], (err, results) => {
-            if (err) {
-                console.error('Erro ao buscar produto:', err);
-                res.status(500).json({ error: 'Erro ao buscar produto' });
-                return;
-            }
-            if (results.length === 0) {
-                res.status(404).json({ error: 'Produto não encontrado' });
-                return;
-            }
-            mysql.query('DELETE FROM ospedidos WHERE produto_id = ?', [req.params.id], (err, result) => {
+            mysql.query('DELETE FROM ospedidos WHERE idpedido = ?', [req.params.idpedido], (err, result) => {
                 if (err) {
                     console.error('Erro ao excluir pedido:', err);
                     res.status(500).json({ error: 'Erro ao excluir pedido' });
@@ -168,9 +158,8 @@ router.delete('/:id', (req, res) => {
                     res.status(202).json({ message: 'Pedido removido com sucesso' });
                 }
             });
-        });
     } catch (error) {
-        console.error('Erro ao processar a rota DELETE /:id', error);
+        console.error('Erro ao processar a rota DELETE /:idpedido', error);
         res.status(500).json({ error: 'Erro interno ao processar a requisição' });
     }
 });
