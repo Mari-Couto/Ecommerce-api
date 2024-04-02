@@ -3,6 +3,14 @@ const router = express.Router();
 const Pedido = require('../models/pedidoModelo');
 const mysql = require('../mysql')
 
+function formatarData(data) {
+    const dataObj = new Date(data);
+    const dia = dataObj.getDate().toString().padStart(2, '0');
+    const mes = (dataObj.getMonth() + 1).toString().padStart(2, '0'); 
+    const ano = dataObj.getFullYear();
+    return `${mes}/${dia}/${ano}`;
+}
+
 
 //exibir pedidos
 router.get('/', (req, res) => {
@@ -27,9 +35,10 @@ router.get('/', (req, res) => {
                 }
                 const pedidos = results.map(item =>  {
                     const fileLink = item.file ? `/produtos/imagem/${item.produto_id}` : null;
-                    return new Pedido(item.idpedido, item.produto_id, item.quantidade, item.data_pedido, item.produto_nome, 
-                item.preco_unitario, item.produto_descricao, fileLink)});
-                res.status(200).json(pedidos); 
+                    const dataCerta = formatarData(item.data_pedido);
+                    return new Pedido(item.idpedido, item.produto_id, item.quantidade, dataCerta, item.produto_nome, item.preco_unitario, item.produto_descricao, fileLink);
+                });
+                res.status(200).json(pedidos);
                     
             });
     } catch (error) {
@@ -38,13 +47,6 @@ router.get('/', (req, res) => {
     }
 });
 
-function formatarData(data) {
-    const dataObj = new Date(data);
-    const dia = dataObj.getDate().toString().padStart(2, '0');
-    const mes = (dataObj.getMonth() + 1).toString().padStart(2, '0'); 
-    const ano = dataObj.getFullYear();
-    return `${mes}/${dia}/${ano}`;
-}
 
 //Retornar um pedido
 router.get('/:idpedido', (req, res) => {
@@ -75,11 +77,10 @@ router.get('/:idpedido', (req, res) => {
                 }
                 const pedidos = results.map(item =>  {
                     const fileLink = item.file ? `/produtos/imagem/${item.produto_id}` : null;
-                    const dataPedido = new Date(item.data_pedido); 
-                    const dataCerta = formatarData(dataPedido);
-                    return new Pedido(item.idpedido, item.produto_id, item.quantidade, dataCerta, item.produto_nome, 
-                item.preco_unitario, item.produto_descricao, fileLink)});
-                res.status(200).json(pedidos); 
+                    const dataCerta = formatarData(item.data_pedido);
+                    return new Pedido(item.idpedido, item.produto_id, item.quantidade, dataCerta, item.produto_nome, item.preco_unitario, item.produto_descricao, fileLink);
+                });
+                res.status(200).json(pedidos);
             }
         );
     } catch (error) {
