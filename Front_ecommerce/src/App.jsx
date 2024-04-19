@@ -1,10 +1,11 @@
 import './App.css'
+import ProductList from './components/ProductList';
 
 function App() {
 
   return (
       <div>
-        <h1>Front do Ecommerce</h1>
+        <ProductList/>
       </div>
   )
 }
