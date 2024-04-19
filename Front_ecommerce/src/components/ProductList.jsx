@@ -20,13 +20,14 @@ const ProductList = () => {
     <div>
       <h1>Lista de produtos</h1>
       <ul>
-        {products.map(product =>(
-            <li key={product.id}>
-                <h2>{product.nome}</h2>
-                <p>Preço: R${product.preco}</p>
-                <p>Descrição: {product.descricao}</p>
-                {product.fileLink && <img src={product.fileLink} alt={product.nome} />}
-          
+               {products.map(product => (
+                    <li key={product.id}>
+                        <h2>{product.nome}</h2>
+                        <p>Id do produto: #{product.id}</p>
+                        <p>Preço: R${product.preco}</p>
+                        <p>Descrição: {product.descricao}</p>
+                               {/*Falta a imagem*/}
+                        
             </li>
         ))}
       </ul>
