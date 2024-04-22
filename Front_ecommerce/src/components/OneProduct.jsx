@@ -30,6 +30,7 @@ const OneProduct = () => {
           <p>Id do produto: #{product.id}</p>
           <p>Descrição: {product.descricao}</p>
           <p>Preço: R$ {product.preco}</p>
+          {/* falta a imagem */}
         </div>
       )}
     </div>

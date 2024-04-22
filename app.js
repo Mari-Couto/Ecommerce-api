@@ -23,7 +23,6 @@ app.use((req, res, next) => {
     error.status = 404;
     next(error);
 });
-  
 
 app.use((err, req, res, next) => {
     res.status(err.status || 500);
