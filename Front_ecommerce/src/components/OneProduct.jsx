@@ -9,7 +9,12 @@ const OneProduct = () => {
   const fetchProduct = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/produtos/${productId}`);
-      setProduct(response.data[0]); 
+      const productData = response.data[0];
+      let imageUrl = null;
+      if (productData.file) {
+        imageUrl = `http://localhost:3000/produtos/imagem/${productData.id}`;
+      }
+      setProduct({ ...productData, imageUrl });
       setMessage('');
     } catch (error) {
       console.error('Erro ao buscar produto:', error);
@@ -34,9 +39,9 @@ const OneProduct = () => {
         <div>
           <h2>{product.nome}</h2>
           <p>Id do produto: #{product.id}</p>
-          <p>Descrição: {product.descricao}</p>
           <p>Preço: R$ {product.preco}</p>
-          {/* Falta a imagem */}
+          <p>Descrição: {product.descricao}</p>
+          {product.imageUrl && <img src={product.imageUrl} alt={product.nome} />}
         </div>
       )}
     </div>
