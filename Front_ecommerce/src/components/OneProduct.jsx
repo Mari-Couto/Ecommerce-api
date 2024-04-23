@@ -41,7 +41,7 @@ const OneProduct = () => {
           <p>Id do produto: #{product.id}</p>
           <p>Preço: R$ {product.preco}</p>
           <p>Descrição: {product.descricao}</p>
-          {product.imageUrl && <img src={product.imageUrl} alt={product.nome} />}
+          {product.imageUrl && <img src={product.imageUrl} alt={product.nome} className="product-image" />}
         </div>
       )}
     </div>
