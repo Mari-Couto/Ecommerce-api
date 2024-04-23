@@ -83,31 +83,32 @@ router.get('/imagem/:id', (req, res) => {
   }
 });
 
-
 //Insere os produtos
-router.post('/', (req, res) => {
+router.post('/', upload.single('file'), (req, res) => {
+  console.log(req.file)
   const produto = req.body; 
   try {
-    mysql.query('INSERT INTO osprodutos (nome, preco, descricao) VALUES (?, ?, ?)', 
-      [produto.nome, produto.preco, produto.descricao], 
-       (err, result) => {
-         if (err) {
+    if (!req.file) {
+      return res.status(400).json({ message: 'Nenhum arquivo foi enviado.' });
+    }
+    const fileContent = fs.readFileSync(req.file.path);
+
+    mysql.query('INSERT INTO osprodutos (nome, preco, descricao, file) VALUES (?, ?, ?, ?)', 
+      [produto.nome, produto.preco, produto.descricao, fileContent], 
+      (err, result) => {
+        if (err) {
           res.status(500).json({ error: 'Erro ao inserir produto' });
         } else {
-          const novoProduto = {
-            id: result.insertId,
-            nome: produto.nome,
-            preco: produto.preco,
-            descricao: produto.descricao
-          };
-          res.status(200).json({ message: 'Produto inserido com sucesso', produto: novoProduto });
+          const novoProdutoId = result.insertId;
+          res.status(201).json({ id: novoProdutoId, message: 'Produto inserido com sucesso.' });
         }
       });
+
   } catch (error) {
     console.error('Erro ao executar a consulta:', error);
     res.status(500).json({ error: 'Erro interno ao processar a requisição' });
   }
-});  //vai ficar sem imagem por enquanto
+});
 
 
   //Alterar produto

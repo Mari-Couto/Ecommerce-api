@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
 const url = 'http://localhost:3000/produtos';
@@ -7,54 +7,47 @@ const SendProduct = () => {
   const [data, setData] = useState({
     nome: '',
     preco: '',
-    descricao: ''
+    descricao: '',
+    file: null
   });
   const [message, setMessage] = useState('');
+
   const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
-  
+    if (e.target.type === 'file') {
+      setData({ ...data, file: e.target.files[0] });
+    } else {
+      setData({ ...data, [e.target.name]: e.target.value });
+    }
+  };  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
-      await axios.post(url, JSON.stringify(data), {
+      const formData = new FormData();
+      formData.append('nome', data.nome);
+      formData.append('preco', data.preco);
+      formData.append('descricao', data.descricao);
+      formData.append('file', data.file); 
+
+      await axios.post(url, formData, { 
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'multipart/form-data' 
         }
       });
+
       setMessage('Produto inserido com sucesso.');
-      setData({ nome: '', preco: '', descricao: '' });
+      setData({ nome: '', preco: '', descricao: '', file: null }); 
     } catch (error) {
       console.error('Erro ao inserir produto:', error);
       setMessage('Erro ao inserir produto. Por favor, tente novamente.');
     }
   };
 
-
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(url);
-        const newData = Object.keys(data).reduce((acc, key) => {
-          acc[key] = res.data[key] !== undefined ? res.data[key] : '';
-          return acc;
-        }, {});
-        setData(newData);
-      } catch (error) {
-        console.error('Erro ao buscar dados:', error);
-      }
-    };
-    fetchData();
-  }, [url]);
-  
-  
   return (
     <div>
       <h2>Adicionar Novo Produto</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data"> 
         <div>
           <label>Nome:</label>
           <input type="text" name="nome" value={data.nome} onChange={handleChange} required />
@@ -65,7 +58,11 @@ const SendProduct = () => {
         </div>
         <div>
           <label>Descrição:</label>
-          <textarea name="descricao" value={data.descricao} onChange={handleChange}  />
+          <textarea name="descricao" value={data.descricao} onChange={handleChange} />
+        </div>
+        <div> 
+          <label>Imagem:</label>
+          <input type="file" name="file" onChange={handleChange} />
         </div>
         <button type="submit">Adicionar Produto</button>
       </form>
