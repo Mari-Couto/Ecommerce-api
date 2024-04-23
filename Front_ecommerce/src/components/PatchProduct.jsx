@@ -6,10 +6,11 @@ const PatchProduct = () => {
   const [productName, setProductName] = useState('');
   const [productPrice, setProductPrice] = useState('');
   const [productDescription, setProductDescription] = useState('');
+  const [productImage, setProductImage] = useState('');
   const [message, setMessage] = useState('');
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
     if (name === 'productId') {
       setProductId(value);
     } else if (name === 'productName') {
@@ -18,6 +19,8 @@ const PatchProduct = () => {
       setProductPrice(value);
     } else if (name === 'productDescription') {
       setProductDescription(value);
+    } else if (name === 'file') {
+      setProductImage(files[0]);
     }
   };
 
@@ -25,16 +28,24 @@ const PatchProduct = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.patch(`http://localhost:3000/produtos/${productId}`, {
-        nome: productName,
-        preco: productPrice,
-        descricao: productDescription
+      const formData = new FormData();
+      formData.append('nome', productName);
+      formData.append('preco', productPrice);
+      formData.append('descricao', productDescription);
+      formData.append('file', productImage); 
+  
+      const response = await axios.patch(`http://localhost:3000/produtos/${productId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data' 
+        }
       });
+  
       setMessage(response.data.message);
       setProductId('');
       setProductName('');
       setProductPrice('');
       setProductDescription('');
+      setProductImage(''); 
     } catch (error) {
       setMessage('Erro ao atualizar produto. Por favor, tente novamente.');
     }
@@ -59,6 +70,10 @@ const PatchProduct = () => {
         <div>
           <label>Nova Descrição:</label>
           <textarea name="productDescription" value={productDescription} onChange={handleChange} />
+        </div>
+        <div> 
+          <label>Imagem:</label>
+          <input type="file" name="file" onChange={handleChange} />
         </div>
         <button type="submit">Atualizar Produto</button>
       </form>
