@@ -1,4 +1,5 @@
 import './App.css'
+import DeleteOrder from './components/DeleteOrder';
 import DeleteProduct from './components/DeleteProduct';
 import OneOrder from './components/OneOrder';
 import OneProduct from './components/OneProduct';
@@ -21,6 +22,7 @@ function App() {
         <OneOrder/>
         <OrderList/>
         <SendOrder/>
+        <DeleteOrder/>
 
       </div>
   )
