@@ -1,5 +1,6 @@
 import './App.css'
 import DeleteProduct from './components/DeleteProduct';
+import OneOrder from './components/OneOrder';
 import OneProduct from './components/OneProduct';
 import OrderList from './components/OrderList';
 import PatchProduct from './components/PatchProduct';
@@ -16,7 +17,9 @@ function App() {
         <DeleteProduct/>
         <PatchProduct/>
         <hr className="custom-line" /> 
+        <OneOrder/>
         <OrderList/>
+
       </div>
   )
 }

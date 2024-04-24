@@ -36,7 +36,7 @@ const OrderList = () => {
       <h1>Lista de pedidos</h1>
       <ul>
         {orders.map(order => (
-            <li key={order.produto_id}>
+            <li key={order.idpedido}>
                 <h2>{order.produto_nome}</h2>
                 <p>Id do pedido: #{order.idpedido}</p>
                 <p>Quantidade: {order.quantidade}</p>
