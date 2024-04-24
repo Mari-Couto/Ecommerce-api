@@ -3,3 +3,9 @@
     height: 200px; 
   }
   
+  .custom-line {
+    border: 2px solid black; 
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
