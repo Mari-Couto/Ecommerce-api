@@ -5,6 +5,7 @@ import OneProduct from './components/OneProduct';
 import OrderList from './components/OrderList';
 import PatchProduct from './components/PatchProduct';
 import ProductList from './components/ProductList';
+import SendOrder from './components/SendOrder';
 import SendProduct from './components/SendProduct';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <hr className="custom-line" /> 
         <OneOrder/>
         <OrderList/>
+        <SendOrder/>
 
       </div>
   )
