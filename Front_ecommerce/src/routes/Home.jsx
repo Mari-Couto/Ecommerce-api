@@ -1,11 +1,21 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Home = () => {
+
+function App() {
   return (
-    <div>
-      <h1>Ola</h1>
+    <div className="container">
+      <h1>Bem vindo</h1>
+      <div className="buttons-container">
+        <Link to="/pedidos">
+          <button className="action-button">Quero comprar</button>
+        </Link>
+        <Link to="/produtos">
+          <button className="action-button">Quero postar produto</button>
+        </Link>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Home
+export default App;
