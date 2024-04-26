@@ -45,30 +45,30 @@ const SendProduct = () => {
   };
 
   return (
-    <div>
-      <h2>Adicionar Novo Produto</h2>
-      <form onSubmit={handleSubmit} encType="multipart/form-data"> 
-        <div>
-          <label>Nome:</label>
-          <input type="text" name="nome" value={data.nome} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Preço:</label>
-          <input type="number" name="preco" value={data.preco} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Descrição:</label>
-          <textarea name="descricao" value={data.descricao} onChange={handleChange} />
-        </div>
-        <div> 
-          <label>Imagem:</label>
-          <input type="file" name="file" onChange={handleChange} />
-        </div>
-        <button type="submit">Adicionar Produto</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
-  );
+    <div className="form-container">
+    <h2>Adicionar Novo Produto</h2>
+    <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <div>
+        <label>Nome:</label>
+        <input type="text" name="nome" value={data.nome} onChange={handleChange} required />
+      </div>
+      <div>
+        <label>Preço:</label>
+        <input type="number" name="preco" value={data.preco} onChange={handleChange} required />
+      </div>
+      <div>
+        <label>Descrição:</label>
+        <textarea name="descricao" value={data.descricao} onChange={handleChange} />
+      </div>
+      <div>
+        <label>Imagem:</label>
+        <input type="file" name="file" onChange={handleChange} />
+      </div>
+      <button type="submit">Adicionar Produto</button>
+    </form>
+    {message && <p>{message}</p>}
+  </div>
+);
 };
 
 export default SendProduct;

@@ -29,7 +29,7 @@ const SendOrder = () => {
     }
 
     return (
-        <div>
+        <div className="form-container">
             <h1>Faça seu pedido</h1>
             <form onSubmit={handleSubmit}>
                 <div>

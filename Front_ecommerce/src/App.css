@@ -91,7 +91,7 @@ button {
 /* botão */
 
 .button {
-  background-color: #839fbe; 
+  background-color: #517bab; 
   color: #fff; 
   padding: 10px 20px; 
   border: none; 
@@ -103,3 +103,49 @@ button {
 .button:hover {
   background-color: #48698c; 
 }
+
+
+/* Envio */
+
+.form-container {
+  width: 50%;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.form-container input,
+.form-container textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #555555;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.form-container button {
+  background-color: #517bab;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-container button:hover {
+  background-color: #48698c;
+}
+
