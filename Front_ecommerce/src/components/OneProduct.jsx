@@ -24,28 +24,29 @@ const OneProduct = () => {
   };
 
   return (
-    <div>
-      <input
+    <div className="search-container">
+    <input className='search'
         type="number"
         placeholder="ID do Produto"
         value={productId}
         onChange={(e) => setProductId(e.target.value)}
-      />
-      <button onClick={fetchProduct}>Buscar Produto</button>
-      
-      {message && <p>{message}</p>}
+    />
+    <button className='button' onClick={fetchProduct}>Buscar Produto</button>
 
-      {product && (
-        <div>
-          <h2>{product.nome}</h2>
-          <p>Id do produto: #{product.id}</p>
-          <p>Preço: R$ {product.preco}</p>
-          <p>Descrição: {product.descricao}</p>
-          {product.imageUrl && <img src={product.imageUrl} alt={product.nome} className="product-image" />}
+    {message && <p className="error-message">{message}</p>}
+
+    {product && (
+        <div className="details">
+            <h2>{product.nome}</h2>
+            <p>Id do produto: #{product.id}</p>
+            <p>Preço: R$ {product.preco}</p>
+            <p>Descrição: {product.descricao}</p>
+            {product.imageUrl && <img src={product.imageUrl} alt={product.nome} className="product-image" />}
         </div>
-      )}
-    </div>
-  );
+    )}
+</div>
+);
 };
+
 
 export default OneProduct;

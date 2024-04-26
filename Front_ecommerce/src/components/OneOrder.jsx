@@ -24,19 +24,19 @@ const OneOrder = () => {
   };
 
   return (
-    <div>
-      <input
+    <div className="search-container">
+      <input className='search'
         type="number"
         placeholder="ID do Pedido"
         value={orderId}
         onChange={(e) => setOrderId(e.target.value)}
       />
-      <button onClick={fetchOrder}>Buscar Pedido</button>
+      <button className='button' onClick={fetchOrder}>Buscar Pedido</button>
       
-      {message && <p>{message}</p>}
+      {message && <p className="error-message">{message}</p>}
 
       {order && (
-        <div>
+        <div className="details">
           <h2>{order.produto_nome}</h2>
           <p>Id do pedido: #{order.idpedido}</p>
           <p>Quantidade: {order.quantidade}</p>
