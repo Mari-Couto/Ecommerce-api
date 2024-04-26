@@ -9,8 +9,8 @@ const Products = () => {
   return (
     <div>
      <h1>Produtos</h1>
+     <OneProduct/>
       <ProductList/>
-      <OneProduct/>
       <SendProduct/>
       <DeleteProduct/>
       <PatchProduct/>
