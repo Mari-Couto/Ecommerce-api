@@ -32,11 +32,11 @@ const OrderList = () => {
 
 
   return (
-    <div>
-      <h1>Lista de pedidos</h1>
-      <ul>
-        {orders.map(order => (
-            <li key={order.idpedido}>
+    <div className="orders">
+    <h1>Lista de pedidos</h1>
+    <div className="order-grid">
+        {orders.map((order, index) => (
+            <div key={order.idpedido} className="order-card">
                 <h2>{order.produto_nome}</h2>
                 <p>Id do pedido: #{order.idpedido}</p>
                 <p>Quantidade: {order.quantidade}</p>
@@ -44,13 +44,13 @@ const OrderList = () => {
                 <p>Descrição: {order.produto_descricao}</p>
                 <p>Data do pedido: {order.data_pedido}</p>
                 <p>Id do produto: #{order.produto_id}</p>
-                {order.imageUrl && <img src={order.imageUrl} 
-                alt={order.nome} className="product-image" />}
-            </li>
+                {order.imageUrl && <img src={order.imageUrl} alt={order.nome} className="product-image" />}
+            </div>
         ))}
-      </ul>
     </div>
-  )
-}
+</div>
+);
+};
+
 
 export default OrderList;

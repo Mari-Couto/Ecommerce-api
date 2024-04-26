@@ -8,9 +8,9 @@ import UpdateOrder from "../components/UpdateOrder"
 const Orders = () => {
   return (
     <div>
-     <h1>Pedidos</h1>
-     <OrderList/> 
+     <h1 className="centralizar">Pedidos</h1>
      <OneOrder/>
+     <OrderList/> 
      <SendOrder/>
      <DeleteOrder/>
      <UpdateOrder/>

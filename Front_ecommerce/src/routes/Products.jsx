@@ -8,7 +8,7 @@ import PatchProduct from '../components/PatchProduct'
 const Products = () => {
   return (
     <div>
-     <h1>Produtos</h1>
+     <h1 className="centralizar">Produtos</h1>
      <OneProduct/>
       <ProductList/>
       <SendProduct/>
