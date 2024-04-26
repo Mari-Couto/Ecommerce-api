@@ -22,7 +22,7 @@ const UpdateOrder = () => {
     };
 
     return (
-        <div>
+        <div className="form-container">
             <h1>Atualizar Pedido</h1>
             <div>
                 <label>ID do Pedido:</label>
@@ -33,7 +33,7 @@ const UpdateOrder = () => {
                 <input type="text" value={novaQuantidade} onChange={(e) => setNovaQuantidade(e.target.value)} />
             </div>
             <button onClick={handleUpdate}>Atualizar Quantidade</button>
-            {message && <p>{message}</p>}
+            {message && <p className="sucess-message">{message}</p>}
         </div>
     );
 };

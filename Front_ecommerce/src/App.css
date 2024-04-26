@@ -10,7 +10,14 @@
     margin-top: 20px; 
   }
   
-  
+  .title{
+    text-align: center;
+    font-size: 50px;
+    }
+
+  .sucess-message{
+    color: green;
+  }
   
 
 /*Produtos lista */
@@ -33,9 +40,7 @@
     text-align: left;
   }
 
-  .centralizar{
-  text-align: center;
-  }
+
   
 
 /*Pedidos lista */
@@ -62,7 +67,8 @@
 /*Busca por id*/
 .search-container {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 70px;
+  margin-bottom: 70px;
 }
 
 .search{
@@ -114,6 +120,8 @@ button {
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .form-container h2 {

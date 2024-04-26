@@ -66,7 +66,7 @@ const SendProduct = () => {
       </div>
       <button type="submit">Adicionar Produto</button>
     </form>
-    {message && <p>{message}</p>}
+    {message && <p className="sucess-message">{message}</p>}
   </div>
 );
 };

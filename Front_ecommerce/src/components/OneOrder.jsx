@@ -25,6 +25,7 @@ const OneOrder = () => {
 
   return (
     <div className="search-container">
+      <h1>Busque seu pedido</h1>
       <input className='search'
         type="number"
         placeholder="ID do Pedido"

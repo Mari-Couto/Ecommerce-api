@@ -52,7 +52,7 @@ const PatchProduct = () => {
   };
 
   return (
-    <div>
+    <div className="form-container">
       <h2>Alterar Produto</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -77,7 +77,7 @@ const PatchProduct = () => {
         </div>
         <button type="submit">Atualizar Produto</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p className="sucess-message">{message}</p>}
     </div>
   );
 };

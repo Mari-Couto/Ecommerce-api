@@ -11,12 +11,12 @@ const Orders = () => {
       <Link to="/">
           <button className="button">Voltar</button>
         </Link>
-     <h1 className="centralizar">Pedidos</h1>
+     <h1 className='title'>Pedidos</h1>
      <OneOrder/>
      <OrderList/> 
      <SendOrder/>
-     <DeleteOrder/>
      <UpdateOrder/>
+     <DeleteOrder/>
 
     </div>
   )

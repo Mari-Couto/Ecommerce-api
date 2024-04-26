@@ -22,7 +22,7 @@ const DeleteProduct = () => {
   };
 
   return (
-    <div>
+    <div className="form-container">
       <h2>Excluir Produto</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -31,7 +31,7 @@ const DeleteProduct = () => {
         </div>
         <button type="submit">Excluir Produto</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p className="sucess-message">{message}</p>}
     </div>
   );
 };

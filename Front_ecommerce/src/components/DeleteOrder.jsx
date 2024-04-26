@@ -18,12 +18,12 @@ const DeleteOrder = () => {
     };
 
     return (
-        <div>
+        <div className="form-container">
             <h1>Excluir Pedido</h1>
             <label>ID do Pedido:</label>
             <input type="text" value={idPedido} onChange={(e) => setIdPedido(e.target.value)} />
             <button onClick={handleDelete}>Excluir Pedido</button>
-            {message && <p>{message}</p>}
+            {message && <p className="sucess-message">{message}</p>}
         </div>
     );
 };
