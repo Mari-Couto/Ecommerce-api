@@ -42,7 +42,7 @@ const SendOrder = () => {
                 </div>
                 <button type="submit">Enviar Pedido</button>
             </form>
-            {message && <p>{message}</p>}
+            {message && <p className="sucess-message">{message}</p>}
         </div>
     );
 }
